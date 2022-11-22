@@ -11,6 +11,8 @@ import Routes from './routes';
 
 import './App.css';
 
+// Comentario para o PR
+
 class App extends Component {
   constructor(props) {
     super(props);
