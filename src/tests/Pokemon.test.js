@@ -1,5 +1,6 @@
 import React from 'react';
 import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
 import App from '../App';
 import renderWithRouter from '../renderWithRouter';
 
@@ -16,12 +17,13 @@ describe('Requisito 6 - Teste o componente <Pokemon.js />', () => {
     });
     test('Testa se o tipo correto do Pokémon é mostrado na tela', () => {
       // Acessar
-      const { getAllByText } = renderWithRouter(<App />);
-      const typeEL = getAllByText(/electric/i);
+      const { getByTestId } = renderWithRouter(<App />);
+      const typeEL = getByTestId('pokemon-type');
       // Agir
 
       // Aferir
-      expect(typeEL[0]).toBeInTheDocument();
+      expect(typeEL).toBeInTheDocument();
+      expect(typeEL).toHaveTextContent('Electric');
     });
     test('Testa se o peso médio do POkémin é exibido na tela no formato Average weight: <value> <measurementUnit>', () => {
       // Acessar
@@ -46,6 +48,7 @@ describe('Requisito 6 - Teste o componente <Pokemon.js />', () => {
       // Aferir
       expect(nameImgEl).toBeInTheDocument();
       expect(srcImgEl).toBeInTheDocument();
+      expect(srcImgEl.src).toContain('https://cdn2.bulbagarden.net/upload/b/b2/Spr_5b_025_m.png');
     });
   });
   test('Testa se o card do Pokémon indicado na Pokédex contém um link de navegação para exibir detalhes deste Pokémon', () => {
@@ -58,27 +61,19 @@ describe('Requisito 6 - Teste o componente <Pokemon.js />', () => {
     expect(history.location.pathname).toBe('/pokemon/25');
   });
   describe('Testa se existe um ícone de estrela nos Pokémon favoritados', () => {
-    test('Testa se o ícone é uma imagem com atributo src contendo o caminho /star-icon,svg', () => {
-      // Acessar
-      const { getByRole } = renderWithRouter(<App />);
-      const starSrcEl = getByRole('img', {
-        src: '/star-icon.svg',
+    test('Testa se o ícone é uma imagem com atributo src contendo o caminho /star-icon,svg e se a imagem tem o atributo alt igual a <Pokemon> is marked as favorite', () => {
+      const { getByRole, history, getByAltText } = renderWithRouter(<App />);
+      act(() => {
+        history.push('/pokemon/25');
       });
-      // Agir
-
-      // Aferir
-      expect(starSrcEl).toBeInTheDocument();
-    });
-    test('Testa se a imagem tem o atributo alt igual a <Pokemon> is marked as favorite, onde <Pokemon> é o nome do Pokémon exibido', () => {
-      // Acessar
-      const { getByRole } = renderWithRouter(<App />);
-      const starAltEl = getByRole('img', {
-        alt: /pikachu is marked as favorite/i,
+      const favoriteCheckBox = getByRole('checkbox');
+      userEvent.click(favoriteCheckBox);
+      act(() => {
+        history.push('/');
       });
-      // Agir
-
-      // Aferir
-      expect(starAltEl).toBeInTheDocument();
+      const starImgEl = getByAltText('Pikachu is marked as favorite');
+      expect(starImgEl).toHaveAttribute('src', '/star-icon.svg');
+      expect(starImgEl).toHaveAttribute('alt', 'Pikachu is marked as favorite');
     });
   });
 });
