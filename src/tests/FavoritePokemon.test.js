@@ -1,10 +1,7 @@
 import React from 'react';
 import { FavoritePokemon } from '../pages';
 import renderWithRouter from '../renderWithRouter';
-
-const data = require('../mock/mockData');
-
-jest.mock('../mock/mockData');
+import data from '../data';
 
 describe('Requisito 3 - Teste o componente <FavoritePokemon.js />', () => {
   test(`Testa se é exibida na tela a mensagem "No favorite pokemon found",
@@ -24,7 +21,6 @@ describe('Requisito 3 - Teste o componente <FavoritePokemon.js />', () => {
     // Agir
 
     // Aferir
-    console.log(data);
-    expect(data.data.name).toBe('Pikachu');
+    expect(data[0].name).toBe('Pikachu');
   });
 });
