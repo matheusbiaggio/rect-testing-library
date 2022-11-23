@@ -2,7 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 // import userEvent from '@testing-library/user-event';
 import App from '../App';
-import data from '../data';
+// import data from '../data';
 import renderWithRouter from '../renderWithRouter';
 
 describe('Requisito 7 - Teste o componente <PokemonDetails.js />', () => {
